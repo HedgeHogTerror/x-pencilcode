@@ -1,0 +1,45 @@
+
+
+<script src="pencilcodeembed.js"></script>
+<script src="turtlebits.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"></script>
+
+
+<polymer-element name="x-pencilcode" attributes="id user url edit widthPercent heightPercent align">
+    <template>
+        <div  id="{{id}}" style="width: {{widthPercent}}%;  height: {{heightPercent}}%" ></div>
+    </template>
+    <script>
+        Polymer('x-pencilcode', {
+            // default id
+            id: 'ex1',
+            /**
+             * Code to display.
+             *
+             * @attribute code
+             * @type string
+             * @default ''
+             */
+            user: '',
+
+            url: '',
+
+            edit: 'edit',
+
+            //defaults
+            widthPercent: 75,
+
+            heightPercent: 75,
+
+            align: 'middle',
+
+            ready: function ()  {      
+                pencilCode = new PencilCodeEmbed(document.getElementById(this.id));
+                $.get( 'http://'+this.user+'.pencilcode.net/'+this.edit+'/'+this.url, function(data) {    
+                    console.log(data);    
+                    pencilCode.beginLoad(data);    
+                });
+            }        
+        });
+    </script>
+</polymer-element>
