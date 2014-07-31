@@ -1,18 +1,29 @@
 
-
-<script src="pencilcodeembed.js"></script>
 <script src="turtlebits.js"></script>
+<script src="pencilcodeembed.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"></script>
 
 
-<polymer-element name="x-pencilcode" attributes="id user url edit widthPercent heightPercent align">
+<polymer-element name="x-pencilcode" attributes="pid user url type widthPercent heightPercent align hideButton">
     <template>
-        <div  id="{{id}}" style="width: {{widthPercent}}%;  height: {{heightPercent}}%" ></div>
+      <button hidden?='{{hideButton}}' on-tap='{{tapped}}'>Save</button>
+        <div  class="pce" id="{{pid}}" style="width: {{widthPercent}}%;  height: {{heightPercent}}%" >
+        SOME TEXT!
+        
+        </div>
+
+        <style type="text/css">
+
+            .pce{
+              width: 100%;
+              height: 100%;
+            }
+        </style>
     </template>
     <script>
         Polymer('x-pencilcode', {
             // default id
-            id: 'ex1',
+            pid: 'ex1',
             /**
              * Code to display.
              *
@@ -24,7 +35,7 @@
 
             url: '',
 
-            edit: 'edit',
+            type: 'load',
 
             //defaults
             widthPercent: 75,
@@ -33,13 +44,20 @@
 
             align: 'middle',
 
+            hideButton: 0,
+
             ready: function ()  {      
-                pencilCode = new PencilCodeEmbed(document.getElementById(this.id));
-                $.get( 'http://'+this.user+'.pencilcode.net/'+this.edit+'/'+this.url, function(data) {    
-                    console.log(data);    
-                    pencilCode.beginLoad(data);    
+                pencilCode = new PencilCodeEmbed(this.$.ex1);
+              
+                $.getJSON( 'http://'+this.user+'.pencilcode.net/'+this.type+'/'+this.url, function(d) {    
+                    // console.log(d.data);    
+                    pencilCode.beginLoad(d.data);    
                 });
-            }        
+            }, 
+
+             tapped: function (event, detail, sender) {
+                pencilCode.save();
+            }       
         });
     </script>
 </polymer-element>
