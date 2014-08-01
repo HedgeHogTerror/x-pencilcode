@@ -3,27 +3,20 @@
 <script src="pencilcodeembed.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"></script>
 
-
-<polymer-element name="x-pencilcode" attributes="pid user url type widthPercent heightPercent align hideButton">
+<polymer-element name="x-pencilcode" attributes="pencilUser pencilUrl type width height hideButton">
     <template>
-      <button hidden?='{{hideButton}}' on-tap='{{tapped}}'>Save</button>
-        <div  class="pce" id="{{pid}}" style="width: {{widthPercent}}%;  height: {{heightPercent}}%" >
-        SOME TEXT!
-        
-        </div>
-
+      <button hidden?='{{hideSave}}' on-tap='{{tapped}}'>Save</button>
+        <div id="pce" style="width: {{width}};  height: {{height}}" >If you see this text, Something went wrong.</div>
         <style type="text/css">
-
-            .pce{
+            #pce{
               width: 100%;
-              height: 100%;
+              /*height: 100%;*/
             }
         </style>
     </template>
     <script>
         Polymer('x-pencilcode', {
-            // default id
-            pid: 'ex1',
+          
             /**
              * Code to display.
              *
@@ -31,25 +24,29 @@
              * @type string
              * @default ''
              */
+      
             user: '',
-
+      
             url: '',
-
+            /* type to pull from pencilcode
+            default: load , only works atm */
             type: 'load',
-
             //defaults
-            widthPercent: 75,
+            width: 100+'%',
 
-            heightPercent: 75,
+            height: 1+'%',
 
             align: 'middle',
 
-            hideButton: 0,
+            // Boolean value for save button
+            hideSave: 0,
 
-            ready: function ()  {      
-                pencilCode = new PencilCodeEmbed(this.$.ex1);
-              
-                $.getJSON( 'http://'+this.user+'.pencilcode.net/'+this.type+'/'+this.url, function(d) {    
+            ready: function ()  {
+             
+                var pencilCode = new PencilCodeEmbed(this.$.pce);
+                console.log('loadpencil');
+                
+                $.getJSON( 'http://'+this.pencilUser+'.pencilcode.net/'+this.type+'/'+this.pencilUrl, function(d) {    
                     // console.log(d.data);    
                     pencilCode.beginLoad(d.data);    
                 });
