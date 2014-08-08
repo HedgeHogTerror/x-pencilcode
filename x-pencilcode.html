@@ -6,7 +6,7 @@
 <polymer-element name="x-pencilcode" attributes="pencilUser pencilUrl type width height hideButton">
     <template>
       <button hidden?='{{hideSave}}' on-tap='{{tapped}}'>Save</button>
-        <div id="pce" style="width: {{width}};  height: {{height}}" >If you see this text, Something went wrong.</div>
+        <div id="pce" style="position:relative; width: {{width}};  height: {{height}}" >If you see this text, Something went wrong.</div>
         <style type="text/css">
             #pce{
               width: 100%;
@@ -14,47 +14,51 @@
             }
         </style>
     </template>
-    <script>
-        Polymer('x-pencilcode', {
-          
-            /**
-             * Code to display.
-             *
-             * @attribute code
-             * @type string
-             * @default ''
-             */
-      
-            user: '',
-      
-            url: '',
-            /* type to pull from pencilcode
-            default: load , only works atm */
-            type: 'load',
-            //defaults
-            width: 100+'%',
+<script>
+// (function(){
+//   var pencilCode;
 
-            height: 1+'%',
+  Polymer('x-pencilcode', {
+    
+      /**
+       * Code to display.
+       *
+       * @attribute code
+       * @type string
+       * @default ''
+       */
 
-            align: 'middle',
+      user: '',
 
-            // Boolean value for save button
-            hideSave: 0,
+      url: '',
+      /* type to pull from pencilcode
+      default: load , only works atm */
+      type: 'load',
+      //defaults
+      width: '100%',
 
-            ready: function ()  {
-             
-                var pencilCode = new PencilCodeEmbed(this.$.pce);
-                console.log('loadpencil');
-                
-                $.getJSON( 'http://'+this.pencilUser+'.pencilcode.net/'+this.type+'/'+this.pencilUrl, function(d) {    
-                    // console.log(d.data);    
-                    pencilCode.beginLoad(d.data);    
-                });
-            }, 
+      height: '500px',
 
-             tapped: function (event, detail, sender) {
-                pencilCode.save();
-            }       
-        });
-    </script>
+      align: 'middle',
+
+      // Boolean value for save button
+      hideSave: 0,
+
+      ready: function ()  {
+       
+          this.pencilCode = new PencilCodeEmbed(this.$.pce);
+          console.log('loadpencil');
+          var component = this;
+          $.getJSON( 'http://'+this.pencilUser+'.pencilcode.net/'+this.type+'/'+this.pencilUrl, function(d) {    
+              // console.log(d.data);    
+              component.pencilCode.beginLoad(d.data);    
+          });
+      }, 
+
+       tapped: function (event, detail, sender) {
+          this.pencilCode.save();
+      }       
+  });
+// })();
+</script>
 </polymer-element>
